@@ -39,13 +39,17 @@ def process_input(input_text):
     if time_entity is None:
         print("Unable to extract the time.")
         return None
+    
+    # Replace 'pm' and 'am' with ' pm' and ' am' respectively to standardize the format
+    time_entity = time_entity.replace('pm', ' pm').replace('am', ' am')
+    
     try:
-        # Attempt to parse time with or without space before AM/PM
-        alarm_time = datetime.datetime.strptime(time_entity, '%I:%M%p')  # Without space
+        # Attempt to parse time in 12-hour clock format
+        alarm_time = datetime.datetime.strptime(time_entity, '%I:%M %p')
     except ValueError:
         try:
-            # Attempt to parse time with space before AM/PM
-            alarm_time = datetime.datetime.strptime(time_entity, '%I:%M %p')  # With space
+            # Attempt to parse time in 24-hour clock format
+            alarm_time = datetime.datetime.strptime(time_entity, '%H:%M')
         except ValueError:
             print("Invalid time format. Please use 'HH:MM' or 'HH:MM AM/PM' format.")
             return None
